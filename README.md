@@ -1,13 +1,40 @@
 # 인프런
 ##### https://www.inflearn.com/course/node-js-express#
 
-###### macronics.net
+
+
+
+###### Node.Js - Express (생활코딩) - 1 Express, 등록, 생성, 상세보기, 수정, 삭제,미들웨어, Body Parser, Compression, Helmet
 https://macaronics.net/index.php/m03/nodejs/view/1939
 
 
+###### Node.Js - Express (생활코딩) - 2 쿠키와 인증
 https://macaronics.net/index.php/m03/nodejs/view/1940
 
+
+######  Node.Js - Express (생활코딩) - 3 세션과 인증
 https://macaronics.net/index.php/m03/nodejs/view/1941
+
+
+###### Node.Js - Express (생활코딩) - ★ 4 Passport.Js Passport Mysql , Passport 비밀번호 암호화, Passport 회원 가입 , Passport 로그인 , Passport 인증
+https://macaronics.net/index.php/m03/nodejs/view/1942
+
+
+###### Node.Js - Express (생활코딩) - 5 .다중 사용자 , Simple JSONdb
+https://macaronics.net/index.php/m03/nodejs/view/1946
+
+
+###### Node.Js - Express (생활코딩) - 6 .Google Login , Passport Mysql 을 이용한 회원 가입 및 로그인 연동
+https://macaronics.net/index.php/m03/nodejs/view/1947
+
+
+###### Node.Js - Express (생활코딩) - 7 .Facebook Login , Passport Mysql 을 이용한 OAuth2.0 회원 가입 및 로그인 연동
+https://macaronics.net/index.php/m03/nodejs/view/1948
+
+
+
+
+
 
 <div class="cd-content__wrapper">
                 <section class="cd-body" id="description">
