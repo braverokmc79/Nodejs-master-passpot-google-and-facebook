@@ -7,10 +7,14 @@ const session = require('express-session')
 const MySQLStore = require('express-mysql-session')(session);
 const flash = require('connect-flash');
 const app = express()
-const port = 3000
+
 const helmet = require('helmet')
 const dotenv = require("dotenv")
 const db = require('./lib/db');
+
+
+const https = require('https');
+
 
 dotenv.config();
 
@@ -47,6 +51,8 @@ app.get('*', (req, res, next) => {
 
 
 
+
+
 const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth")(passport);
 const topicRouter = require("./routes/topic");
@@ -66,7 +72,24 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!')
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// })
+
+const port = 3000
+https
+  .createServer(
+    {
+      // key: fs.readFileSync(__dirname + '/key.pem', 'utf-8'),
+      // cert: fs.readFileSync(__dirname + '/cert.pem', 'utf-8'),
+      key: fs.readFileSync('C:/https/localhost-key.pem', 'utf-8'),
+      cert: fs.readFileSync('C:/https/localhost.pem', 'utf-8'),
+    },
+    app.use('/', (req, res) => {
+      res.send('Congrats! You made https server now :)');
+    })
+  )
+  .listen(port);
+
+
 

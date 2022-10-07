@@ -2,37 +2,43 @@ const express = require('express');
 const router = express.Router();
 const template = require('../lib/template.js');
 const auth = require("../lib/auth.js");
-
+const db = require("../lib/db");
+global.crypto = require('crypto')
 
 module.exports = function (passport) {
 
   //로그인 페이지
   router.get("/login", (req, res) => {
     const fmsg = req.flash();
+    console.log("fmsg : ", fmsg);
     let feedback = '';
     if (fmsg.error) {
       feedback = fmsg.error[0];
     }
-
     const title = 'WEB - login';
     const list = template.list(req.list);
     const html = template.HTML(title, list, `
             <div style="color:red">${feedback}</div>
             <form action="/auth/login_process" method="post">
-              <p><input type="text" name="username" placeholder="username"></p>  
+              <p><input type="text" name="email" placeholder="email"></p>  
               <p><input type="password" name="password" placeholder="password"></p>                                 
               <p>
                 <input type="submit" value="login">
 
               </p>
               <p>
-              <a class="button google" href="/auth/login/federated/google">Sign in with Google</a>
-              </p>
+              <a class="button google" style="padding: 8px; text-decoration: none; color: #fff;background: #a22f2f;border-radius: 50px;"
+                       href="/auth/login/federated/google">Sign in with Google</a>
+   
+              <a class="button facebook" style="padding: 8px; text-decoration: none; color: #fff; background: #3f51b5;border-radius: 50px;"
+              href="/auth/login/federated/facebook">Sign in with Facebook</a>
+               </p>
             </form>
           `, '', auth.statusUI(req, res));
     res.send(html);
-
   });
+
+
 
 
   // 로그인 처리 - 1) 성공 및 실패 페이지 설정 및 flash 사용여부 설정하기
@@ -52,11 +58,23 @@ module.exports = function (passport) {
   //2.구글로그인 처리 - 콜백 반환
   router.get('/oauth2/redirect/google', passport.authenticate('google', {
     successRedirect: '/',
-    failureRedirect: '/auth/login'
+    failureRedirect: '/auth/login',
+    failureFlash: true,
+    successFlash: true
   }));
 
 
+  //1.페이스북그인 처리 - 로그인 버튼 클릭시
+  router.get('/login/federated/facebook', passport.authenticate('facebook', { scope: 'email' }));
 
+
+  //2.페이스북그인  처리 - 콜백 반환
+  router.get('/oauth2/redirect/facebook', passport.authenticate('facebook', {
+    successRedirect: '/',
+    failureRedirect: '/auth/login',
+    failureFlash: true,
+    successFlash: true
+  }));
 
 
   //로그 아웃 처리
@@ -87,27 +105,33 @@ module.exports = function (passport) {
            <h1>Sign up</h1>
       <form action="/auth/signup_process" method="post">
           <section>
-              <label for="username">username</label>
-              <input id="username" name="username" type="text" autocomplete="username" required>
+              <label for="username">이름</label>
+              <input id="username" name="username" type="text" placeholder="이름" required>
           </section>
          <section>
-              <label for="email">email</label>
-              <input id="email" name="email" type="email" autocomplete="email" required>
+              <label for="email">이메일</label>
+              <input id="email" name="email" type="email" placeholder="이메일" required>
           </section>          
           <section>
-              <label for="password">Password</label>
-              <input id="password" name="password" type="password" autocomplete="new-password" required>
+              <label for="password">비밀번호</label>
+              <input id="password" name="password" type="password" autocomplete="new-password" placeholder="비밀번호" required>
           </section>
+          <section>
+              <label for="password">비밀번호확인</label>
+              <input id="password" name="pw2" type="password" autocomplete="new-password" placeholder="비밀번호확인" required>
+          </section>          
           <button type="submit">Sign up</button>
       </form>
           `, '', auth.statusUI(req, res));
     res.send(html);
   });
 
-
   //회원가입처리
   router.post('/signup_process', function (req, res, next) {
-
+    if (req.body.password !== req.body.pw2) {
+      req.flash("error", "비밀번호가 일치 하지 않습니다.");
+      return res.redirect("/auth/signup");
+    }
     crypto.randomBytes(16, (error, buf) => {
       const salt = buf.toString("base64");
 
@@ -147,7 +171,6 @@ module.exports = function (passport) {
 
     });
   });
-
 
   return router;
 }
