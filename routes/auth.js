@@ -147,6 +147,7 @@ module.exports = function (passport) {
         ], function (err, results, fields) {
 
           if (err) {
+           // req.flash("error", err.toString());
             req.flash("error", err.toString());
             return res.redirect('/auth/signup');
           }
